@@ -3,14 +3,18 @@ import { Row, Col } from "react-bootstrap";
 import { StoreItem } from "../components/StoreItem";
 import { Product } from "../model/model";
 
+import "../style.css"
+import { useTheme } from "../context/ThemeContext";
 type ProductProps = {
   products: Product[]
 }
 
 export function Store({products}:ProductProps) {
+ const darkTheme = useTheme()
+
   return (
-    <>
-      <h1>Products</h1>
+    <div className={`px-4 `}>
+      <h1 className={`${darkTheme && "text-light"}`}>Products</h1>
       <Row md={2} xs={1} lg={4} className="g-3">
         {
           products.map(p => (
@@ -18,7 +22,7 @@ export function Store({products}:ProductProps) {
           ))
         }
       </Row>
-    </>
+    </div>
   )
 }
 

@@ -7,13 +7,17 @@ import { Navbar } from "./components/Navbar";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { useEffect, useState } from "react";
 import { Product } from "./model/model";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import "./style.css"
 
 function App() {
+  // console.log("App rendered..")
   const [products, setProducts] = useState<Product[]>([])
+  const darkTheme = useTheme() 
 
   async function fetchProducts(url:string){
     const res = await fetch(url);
-    const data = await res.json()
+    const data = await res.json();
     const fetchedProducts: Product[] = data.products.map((p:Product) => {
       return {
         id: p.id || '',
@@ -25,27 +29,31 @@ function App() {
         images: p.images || '',
       }
     } )
+
     setProducts(fetchedProducts)
-    if (products){
-      console.log(products)
-    }
   }
 
   useEffect(()=>{
     fetchProducts("https://dummyjson.com/products")
   },[])
+ 
 
+ 
   return (
-    <ShoppingCartProvider products={products}>
-      <Navbar />
-      <Container className="mb-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/store" element={<Store products={products} />} />
-          <Route path="/about" element={< About/>} />
-        </Routes>
-      </Container>
-    </ShoppingCartProvider>
+    
+      <ShoppingCartProvider products={products}>
+          <Navbar/>
+            <div className={`${darkTheme ? "dark--theme": ""}`}>
+              <Container className="mb-4" >
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/store" element={<Store products={products} />} />
+                  <Route path="/about" element={< About/>} />
+                </Routes>
+              </Container>
+            </div>
+      </ShoppingCartProvider>
+    
   )
 }
 
